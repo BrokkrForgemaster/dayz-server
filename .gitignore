@@ -1,1 +1,13 @@
-test/
+.idea/
+.env
+.env.*
+!.env.example
+.junie
+
+server/
+config/
+profiles/
+workshop/
+backups/
+dayz-data/
+*.log

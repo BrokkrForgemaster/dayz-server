@@ -1,1 +1,58 @@
+# Git repository
+.git
+.gitignore
+.gitattributes
+.github
+
+# Rider and IDE settings
+.idea
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Documentation
 README.md
+LICENSE
+LICENSE.md
+
+# Local DayZ data
+server
+config
+profiles
+workshop
+backups
+keys
+mpmissions
+
+# Steam credentials and secrets
+.env
+.env.*
+secrets
+*.secret
+steam-credentials.txt
+
+# Logs and temporary files
+*.log
+logs
+tmp
+temp
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# Docker development overrides
+docker-compose.override.yml
+compose.override.yml
