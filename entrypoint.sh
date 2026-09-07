@@ -184,6 +184,27 @@ update_mods() {
     chown -R "${PUID}:${PGID}" "${SERVER_DIR}/keys"
 }
 
+cleanup_stale_mods() {
+    local active_mods
+    active_mods="$(
+        {
+            normalize_mod_ids "${MOD_IDS}"
+            normalize_mod_ids "${SERVER_MOD_IDS}"
+        } | awk '!seen[$0]++'
+    )"
+
+    while IFS= read -r symlink; do
+        local mod_id
+        mod_id="$(basename "${symlink}" | sed 's/@//')"
+
+        if ! printf '%s\n' "${active_mods}" | grep -qx "${mod_id}"; then
+            log "Removing stale mod @${mod_id} — not in current mod list."
+            rm -f "${symlink}"
+            rm -rf "${WORKSHOP_DIR}/${mod_id}"
+        fi
+    done < <(find "${SERVER_DIR}" -maxdepth 1 -name '@[0-9]*')
+}
+
 create_mod_parameter() {
     local raw_ids="$1"
     local parameter_name="$2"
@@ -373,6 +394,7 @@ main() {
             prepare_directories
             create_backup
             update_server
+            cleanup_stale_mods
             update_mods
             create_server_config
 
