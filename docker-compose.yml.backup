@@ -1,0 +1,86 @@
+services:
+  dayz-server:
+    container_name: dayz-wolfs-den
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: dayz-wolfs-den:latest
+
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 90s
+
+    environment:
+      # Unraid ownership
+      PUID: "99"
+      PGID: "100"
+
+      # Container timezone
+      TZ: "America/New_York"
+
+      # Steam server installation
+      STEAM_APP_ID: "223350"
+      STEAM_WORKSHOP_APP_ID: "221100"
+      STEAM_USER: "${STEAM_USER:-anonymous}"
+      STEAM_PASSWORD: "${STEAM_PASSWORD:-}"
+      STEAM_GUARD_CODE: "${STEAM_GUARD_CODE:-}"
+
+      # Server identity
+      SERVER_NAME: "Wolf's Den"
+      SERVER_DESCRIPTION: "Survive, build, trade and defend what is yours."
+      SERVER_PASSWORD: "${SERVER_PASSWORD:-}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-change-this-admin-password}"
+
+      # Server capacity and networking
+      SERVER_PORT: "2302"
+      SERVER_MAX_PLAYERS: "40"
+      SERVER_CPU_COUNT: "4"
+      SERVER_CONFIG: "serverDZ.cfg"
+
+      # Gameplay
+      MOTD_INTERVAL: "300"
+      ENABLE_WHITELIST: "false"
+      VERIFY_SIGNATURES: "2"
+      FORCE_SAME_BUILD: "true"
+      THIRD_PERSON: "true"
+      CROSSHAIR: "false"
+      VOICE_CHAT: "true"
+      VOICE_QUALITY: "20"
+      PERSISTENT_TIME: "true"
+      SERVER_TIME_ACCELERATION: "6"
+      NIGHT_TIME_ACCELERATION: "4"
+
+      # Updates and backups
+      UPDATE_SERVER: "false"
+      UPDATE_MODS: "false"
+      VALIDATE_SERVER: "false"
+      BACKUP_ON_START: "true"
+      BACKUP_RETENTION_DAYS: "14"
+
+      # Steam Workshop IDs separated with semicolons.
+      # Client mods are placed in MOD_IDS.
+      # Mods that run only on the server use SERVER_MOD_IDS.
+      MOD_IDS: "${MOD_IDS:-}"
+      SERVER_MOD_IDS: "${SERVER_MOD_IDS:-}"
+
+      ADDITIONAL_STARTUP_ARGS: "${ADDITIONAL_STARTUP_ARGS:-}"
+
+    ports:
+      - "2302:2302/udp"
+      - "2303:2303/udp"
+      - "2304:2304/udp"
+      - "2305:2305/udp"
+      - "2306:2306/udp"
+      - "27016:27016/udp"
+
+    volumes:
+      - ./dayz-data/server:/dayz/server
+      - ./dayz-data/config:/dayz/config
+      - ./dayz-data/profiles:/dayz/profiles
+      - ./dayz-data/workshop:/dayz/workshop
+      - ./dayz-data/backups:/dayz/backups
+
+    security_opt:
+      - no-new-privileges:true
